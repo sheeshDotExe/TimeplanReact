@@ -1,3 +1,4 @@
+from __future__ import annotations
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from .forms import UploadFileForm
