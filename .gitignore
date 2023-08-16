@@ -1,6 +1,4 @@
 node_modules
-main.js
-main.js.LICENSE.txt
 *.pyc
 __pycache__
 ARGS_unofficial/api/migrations/*
