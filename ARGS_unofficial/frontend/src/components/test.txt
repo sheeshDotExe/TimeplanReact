@@ -1,0 +1,7 @@
+const test_app = async () => {
+  const results = await fetch(
+    "api/get_classes?class=st2a&elective_subjects=IT1"
+  );
+  const data = await results.json();
+  console.log(data["results"]);
+};
