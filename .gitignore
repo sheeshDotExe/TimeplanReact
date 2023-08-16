@@ -6,3 +6,6 @@ __pycache__
 ARGS_unofficial/api/migrations/*
 ARGS_unofficial/frontend/migrations/*
 *.sqlite3
+*.png
+*.csv
+other
