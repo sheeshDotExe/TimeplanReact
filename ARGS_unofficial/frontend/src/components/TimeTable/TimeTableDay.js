@@ -14,13 +14,18 @@ const InfoDisplay = ({
   teacherLastName,
 }) => {
   return (
-    <div className="flex flex-row items-center gap-2">
-      <p>{className}</p>
-      <p>{classCode}</p>
-      <p>{classRoom}</p>
+    <div className="flex flex-col gap-1">
+      <div className="flex flex-row items-center gap-2 px-2">
+        <p>{className}</p>
+        <p className="font-bold">{classCode}</p>
+        <p>{classRoom}</p>
+      </div>
+      <hr className=" opacity-20"></hr>
+      <div>
       <p>
-        {teacherFirstName} {teacherLastName}
+          {teacherFirstName} {teacherLastName}
       </p>
+      </div>
     </div>
   );
 };
@@ -93,7 +98,7 @@ const Lesson = ({ Data, ColorMap, nextData }) => {
   }, [Data, nextData]);
 
   return (
-    <div className={tailWindStyling} style={styling}>
+    <div className={`${tailWindStyling} text-center`} style={styling}>
       <TimeDisplay position="absolute z-10 px-1 py-0.5 -top-3 left-0 bg-slate-400 text-xs text-center" time={Data.begin} />
       <InfoDisplay
         className={Data.className}
@@ -113,7 +118,7 @@ export const TimeTableDay = ({ TableData, ColorMap}) => {
     <div className="min-h-full" style={{"background-color": "#CCCCCC"}}>
       {TableData.length > 0 && (
         <div className="min-h-screen flex flex-col border-2 border-solid border-black">
-          <h2 className="text-center font-bold px-32 py-6 mb-6 bg-slate-400">
+          <h2 className="text-center font-bold px-16 py-6 mb-6 bg-slate-400 2xl:px-32">
             {TableData[0].day}
           </h2>
           {TableData.map((lession, index) => {

@@ -36,7 +36,7 @@ export const LessonChoices = ({
         <div>
           <p className="font-bold text-2xl">Velg valgfag:</p>
           <div className="p-14">
-          <div className="flex flex-row gap-2">
+          <div className="grid grid-cols-3 gap-2">
           {allLessons.map(({ lessonName, lessonCode }, index) => {
             return (
               <div key={index}>
@@ -55,7 +55,7 @@ export const LessonChoices = ({
                     }
                   }}
                 />
-                <label id={lessonCode} className="border border-black p-10 font-bold hover:bg-slate-400" for={lessonName}>{lessonName}</label>
+                <label id={lessonCode} className="block border border-black p-10 font-bold hover:bg-slate-400" for={lessonName}>{lessonName}</label>
               </div>
             );
           })}

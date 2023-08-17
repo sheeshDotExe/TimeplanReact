@@ -21,7 +21,7 @@ export const HomePage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col m-6 items-center gap-12">
+    <div className="max-w-5xl overflow-hidden flex flex-col m-6 items-center gap-12 2xl:max-w-none">
       <h2 className="text-3xl font-bold">ARGS Timeplan</h2>
       {!timeTableData ? (
         <div>
