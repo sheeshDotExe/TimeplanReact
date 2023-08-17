@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "webpack --mode development --watch",
     "build": "webpack --mode production",
-    "dev-tailwind": "tailwindcss -i ./src/indexReact.css -o ./static/css/index.css --minify"
+    "dev-tailwind": "tailwindcss -i ./src/indexReact.css -o ./static/css/index.css --watch",
+    "prod-tailwind": "tailwindcss -i ./src/indexReact.css -o ./static/css/index.css --minify"
   },
   "keywords": [],
   "author": "",

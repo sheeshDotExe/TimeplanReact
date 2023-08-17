@@ -113,7 +113,35 @@ const Lesson = ({ Data, ColorMap, nextData }) => {
   );
 };
 
-export const TimeTableDay = ({ TableData, ColorMap}) => {
+export const TimeTableDay = ({ TableData, ColorMap, currentDay, thisDay}) => {
+  const [timeIndicatorPos, setTimeIndicatorPos] = useState(0);
+  const [showTimeIndicator, setShowTimeIndicator] = useState(false);
+
+  const doTimeMath = () => {
+    const current = new Date();
+    const dateTimeStart = new Date(
+      `${current.getFullYear()}-${
+        current.getMonth() + 1
+      }-${current.getDate()} ${"08:30"}`
+    );
+    const dateTimeEnd = new Date();
+    const heightMath =
+      ((dateTimeEnd - dateTimeStart) / (1000 * 60 * 60)) *
+      ELEMENT_SCALING_FACTOR;
+    if (heightMath > -2 && heightMath < (9*ELEMENT_SCALING_FACTOR)) {
+      setTimeIndicatorPos(heightMath);
+      setShowTimeIndicator(true);
+    }
+  }
+
+  useEffect(() => {
+    if (currentDay === thisDay){
+      doTimeMath();
+      const interval = setInterval(()=>{doTimeMath()},1000*60);
+      return () => clearInterval(interval);
+    }
+  },[])
+
   return (
     <div className="min-h-full" style={{"background-color": "#CCCCCC"}}>
       {TableData.length > 0 && (
@@ -121,6 +149,11 @@ export const TimeTableDay = ({ TableData, ColorMap}) => {
           <h2 className="text-center font-bold px-16 py-6 mb-6 bg-slate-400 2xl:px-32">
             {TableData[0].day}
           </h2>
+          {(showTimeIndicator) && (
+            <div className="relative">
+              <div className="absolute z-20 w-full h-1 bg-red-600" style={{"top": `${timeIndicatorPos}rem`}}></div>
+            </div>
+          )}
           {TableData.map((lession, index) => {
             return (
               <Lesson

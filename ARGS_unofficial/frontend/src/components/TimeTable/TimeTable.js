@@ -5,6 +5,7 @@ import { ExitTimeTable } from "./ExitTimeTable.js";
 export const TimeTable = ({ TimeTableData, ColorData }) => {
   // process data group by day
   const [allDays, setAllDays] = useState([]);
+  const [currentDay, setCurrentDay] = useState(0);
 
   useEffect(() => {
     if (!TimeTableData) {
@@ -41,6 +42,8 @@ export const TimeTable = ({ TimeTableData, ColorData }) => {
     }
 
     setAllDays(Object.values(days));
+    const currentTime = new Date()
+    setCurrentDay(currentTime.getDay());
   }, []);
 
   return (
@@ -50,7 +53,7 @@ export const TimeTable = ({ TimeTableData, ColorData }) => {
           {allDays.map((day, index) => {
             return (
               <div>
-                <TimeTableDay TableData={day} ColorMap={ColorData}/>
+                <TimeTableDay TableData={day} ColorMap={ColorData} currentDay={currentDay-1} thisDay={index}/>
               </div>
             );
           })}
