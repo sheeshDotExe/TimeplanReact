@@ -17,6 +17,8 @@ from .serializers import TimeSerializer
 
 def remove_csv_data(request):
     if request.method == "POST":
+        if not request.user.is_superuser:
+            return HttpResponse("You are not allowed to sowwy O:")
         file_path = request.POST.get("file_name", None)
         if file_path:
             delete_csv_file(file_path)
