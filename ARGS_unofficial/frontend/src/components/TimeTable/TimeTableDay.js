@@ -116,6 +116,7 @@ const Lesson = ({ Data, ColorMap, nextData }) => {
 export const TimeTableDay = ({ TableData, ColorMap, currentDay, thisDay}) => {
   const [timeIndicatorPos, setTimeIndicatorPos] = useState(0);
   const [showTimeIndicator, setShowTimeIndicator] = useState(false);
+  const [activeDay, setActiveDay] = useState(false);
 
   const doTimeMath = () => {
     const current = new Date();
@@ -136,17 +137,20 @@ export const TimeTableDay = ({ TableData, ColorMap, currentDay, thisDay}) => {
 
   useEffect(() => {
     if (currentDay === thisDay){
+      setActiveDay(true);
       doTimeMath();
       const interval = setInterval(()=>{doTimeMath()},1000*60);
       return () => clearInterval(interval);
+    } else {
+      setActiveDay(false);
     }
-  },[])
+  },[currentDay])
 
   return (
-    <div className="min-h-full" style={{"background-color": "#CCCCCC"}}>
+    <div className={`border-2 border-solid border-black ${activeDay ? "" : "hidden"} md:block`} style={{"background-color": "#CCCCCC", "minHeight": `${ELEMENT_SCALING_FACTOR*9}rem`}}>
       {TableData.length > 0 && (
-        <div className="min-h-screen flex flex-col border-2 border-solid border-black">
-          <h2 className="text-center font-bold px-16 py-6 mb-6 bg-slate-400 2xl:px-32">
+        <div className="flex flex-col">
+          <h2 className="text-center font-bold py-6 mb-6 bg-slate-400 px-32 md:px-16 2xl:px-32">
             {TableData[0].day}
           </h2>
           {(showTimeIndicator) && (

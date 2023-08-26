@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { TimeTableDay } from "./TimeTableDay.js";
 import { ExitTimeTable } from "./ExitTimeTable.js";
+import { DaySelection } from "./DaySelection.js";
 
 export const TimeTable = ({ TimeTableData, ColorData }) => {
   // process data group by day
@@ -43,20 +44,35 @@ export const TimeTable = ({ TimeTableData, ColorData }) => {
 
     setAllDays(Object.values(days));
     const currentTime = new Date()
-    setCurrentDay(currentTime.getDay());
+    setCurrentDay(currentTime.getDay() - 2);
   }, []);
+
+  const setActiveDay = React.useCallback((newDay)=>{
+    setCurrentDay(newDay);
+  }, [currentDay])
 
   return (
     <div>
       {allDays.length > 0 && (
-        <div className="flex flex-row">
-          {allDays.map((day, index) => {
-            return (
-              <div>
-                <TimeTableDay TableData={day} ColorMap={ColorData} currentDay={currentDay-1} thisDay={index}/>
-              </div>
-            );
-          })}
+        <div>
+          <div className="flex flex-row gap-1 py-4 items-center justify-center">
+            {allDays.map((day, index) => {
+                return (
+                  <div>
+                    <DaySelection TableData={day} currentDay={currentDay} thisDay={index} setCurrentDay={setActiveDay}/>
+                  </div>
+                );
+              })}
+          </div>
+          <div className="flex flex-row justify-center">
+            {allDays.map((day, index) => {
+              return (
+                <div>
+                  <TimeTableDay TableData={day} ColorMap={ColorData} currentDay={currentDay} thisDay={index}/>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
       <ExitTimeTable/>
