@@ -52,15 +52,15 @@ const Lesson = ({ Data, ColorMap, nextData }) => {
     setTeacherLastName(teacherSplitName[1]);
     
     const current = new moment();
-    const dateTimeStart = new moment( new Date(
+    const dateTimeStart = new moment(
       `${current.year()}-${
         current.month() + 1
-      }-${current.date()} ${Data.begin}`).toISOString()
+      }-${current.date()} ${Data.begin}`, "YYYY-MM-DD HH:mm"
     );
-    const dateTimeEnd = new moment( new Date(
+    const dateTimeEnd = new moment(
       `${current.year()}-${
         current.month() + 1
-      }-${current.date()} ${Data.end}`).toISOString()
+      }-${current.date()} ${Data.end}`, "YYYY-MM-DD HH:mm"
     );
     const heightMath =
       ((dateTimeEnd - dateTimeStart) / (1000 * 60 * 60)) *
@@ -69,10 +69,10 @@ const Lesson = ({ Data, ColorMap, nextData }) => {
     let paddingBottom = 0;
 
     if (nextData !== null) {
-      const dateTimeNext = new moment( new Date(
+      const dateTimeNext = new moment(
         `${current.year()}-${
           current.month() + 1
-        }-${current.date()} ${nextData.begin}`).toISOString()
+        }-${current.date()} ${nextData.begin}`, "YYYY-MM-DD HH:mm"
       );
 
       const paddingMath =
@@ -122,11 +122,11 @@ export const TimeTableDay = ({ TableData, ColorMap, currentDay, thisDay}) => {
 
   const doTimeMath = () => {
     const current = new moment();
-    const dateTimeStart = new moment(new Date(
+    const dateTimeStart = new moment(
       `${current.year()}-${
         current.month() + 1
-      }-${current.date()} ${"08:30"}`
-    ).toISOString());
+      }-${current.date()} ${"08:30"}`, "YYYY-MM-DD HH:mm"
+    );
     const dateTimeEnd = new moment();
     const heightMath =
       ((dateTimeEnd - dateTimeStart) / (1000 * 60 * 60)) *
