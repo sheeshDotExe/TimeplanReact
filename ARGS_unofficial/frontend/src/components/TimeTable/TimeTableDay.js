@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 
 const ELEMENT_SCALING_FACTOR = 6; // rem per hour
 
+const moment = require('moment');
+moment.suppressDeprecationWarnings = true;
+
 const TimeDisplay = ({ time, position }) => {
   return <div className={position}>{time}</div>;
 };
@@ -34,8 +37,8 @@ const Lesson = ({ Data, ColorMap, nextData }) => {
   const [teacherFirstName, setTeacherFirstName] = useState("");
   const [teacherLastName, setTeacherLastName] = useState("");
   const [styling, setStyling] = useState({
-    height: "0px",
-    "margin-bottom": "0px",
+    height: "0rem",
+    "margin-bottom": "0rem",
   });
   const [tailWindStyling, setTailWindStyling] = useState(
     "relative flex flex-col items-center justify-center border-y-2 border-solid border-black"
@@ -48,17 +51,17 @@ const Lesson = ({ Data, ColorMap, nextData }) => {
     const teacherSplitName = Data.teacher.split(":");
     setTeacherFirstName(teacherSplitName[0]);
     setTeacherLastName(teacherSplitName[1]);
-
-    const current = new Date();
-    const dateTimeStart = new Date(
-      `${current.getFullYear()}-${
-        current.getMonth() + 1
-      }-${current.getDate()} ${Data.begin}`
+    
+    const current = new moment();
+    const dateTimeStart = new moment( new Date(
+      `${current.year()}-${
+        current.month() + 1
+      }-${current.date()} ${Data.begin}`).toISOString()
     );
-    const dateTimeEnd = new Date(
-      `${current.getFullYear()}-${
-        current.getMonth() + 1
-      }-${current.getDate()} ${Data.end}`
+    const dateTimeEnd = new moment( new Date(
+      `${current.year()}-${
+        current.month() + 1
+      }-${current.date()} ${Data.end}`).toISOString()
     );
     const heightMath =
       ((dateTimeEnd - dateTimeStart) / (1000 * 60 * 60)) *
@@ -67,10 +70,10 @@ const Lesson = ({ Data, ColorMap, nextData }) => {
     let paddingBottom = 0;
 
     if (nextData !== null) {
-      const dateTimeNext = new Date(
-        `${current.getFullYear()}-${
-          current.getMonth() + 1
-        }-${current.getDate()} ${nextData.begin}`
+      const dateTimeNext = new moment(
+        `${current.year()}-${
+          current.month() + 1
+        }-${current.date()} ${nextData.begin}`
       );
 
       const paddingMath =
@@ -119,13 +122,13 @@ export const TimeTableDay = ({ TableData, ColorMap, currentDay, thisDay}) => {
   const [activeDay, setActiveDay] = useState(false);
 
   const doTimeMath = () => {
-    const current = new Date();
-    const dateTimeStart = new Date(
-      `${current.getFullYear()}-${
-        current.getMonth() + 1
-      }-${current.getDate()} ${"08:30"}`
-    );
-    const dateTimeEnd = new Date();
+    const current = new moment();
+    const dateTimeStart = new moment(new Date(
+      `${current.year()}-${
+        current.month() + 1
+      }-${current.date()} ${"08:30"}`
+    ).toISOString());
+    const dateTimeEnd = new moment();
     const heightMath =
       ((dateTimeEnd - dateTimeStart) / (1000 * 60 * 60)) *
       ELEMENT_SCALING_FACTOR;
