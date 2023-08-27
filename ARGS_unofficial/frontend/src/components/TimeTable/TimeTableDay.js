@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 const ELEMENT_SCALING_FACTOR = 6; // rem per hour
 
 const moment = require('moment');
-moment.suppressDeprecationWarnings = true;
 
 const TimeDisplay = ({ time, position }) => {
   return <div className={position}>{time}</div>;
@@ -70,10 +69,10 @@ const Lesson = ({ Data, ColorMap, nextData }) => {
     let paddingBottom = 0;
 
     if (nextData !== null) {
-      const dateTimeNext = new moment(
+      const dateTimeNext = new moment( new Date(
         `${current.year()}-${
           current.month() + 1
-        }-${current.date()} ${nextData.begin}`
+        }-${current.date()} ${nextData.begin}`).toISOString()
       );
 
       const paddingMath =
