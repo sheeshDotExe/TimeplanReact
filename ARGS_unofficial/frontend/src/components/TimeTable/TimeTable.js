@@ -44,7 +44,7 @@ export const TimeTable = ({ TimeTableData, ColorData }) => {
 
     setAllDays(Object.values(days));
     const currentTime = new Date()
-    setCurrentDay(currentTime.getDay() - 2);
+    setCurrentDay(currentTime.getDay()-1);
   }, []);
 
   const setActiveDay = React.useCallback((newDay)=>{
