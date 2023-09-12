@@ -19,7 +19,10 @@ def get_lesson_names(class_name: str) -> list[str]:
     for lesson in get_data_base():
         if lesson.mandatory:
             continue
-        if lesson.full_class_name not in lesson_names and lesson.klassekode == class_name:
+        if (
+            lesson.full_class_name not in lesson_names
+            and lesson.klassekode == class_name
+        ):
             lesson_names[lesson.full_class_name] = lesson.klasse
 
     return lesson_names
@@ -57,17 +60,19 @@ def get_class_version(klasse: str) -> int:
         return None
     return version.versjon
 
+
 def get_class_colors(klasse: str) -> dict:
     class_color_map = ColorMap.objects.filter(klasse=klasse).first()
     if not class_color_map:
         return None
-    
+
     class_code_color_map = {}
-    
+
     for class_color in class_color_map.class_colors.all():
         class_code_color_map[class_color.klassekode] = class_color.color
-    
+
     return class_code_color_map
+
 
 def handle_uploaded_file_colors(f):
     file_name = str(f)
@@ -82,19 +87,17 @@ def handle_uploaded_file_colors(f):
         if len(entry.split(",")) != 3:
             print("error", entry)
             return
-        (
-            klasse,
-            klassekode,
-            farge
-        ) = entry.split(",")
+        (klasse, klassekode, farge) = entry.split(",")
 
         class_color_map = ColorMap.objects.filter(klasse=klasse).first()
 
         if not class_color_map:
-            class_color_map = ColorMap(klasse = klasse)
+            class_color_map = ColorMap(klasse=klasse)
             class_color_map.save()
 
-        class_code_color = class_color_map.class_colors.filter(klassekode=klassekode).first()
+        class_code_color = class_color_map.class_colors.filter(
+            klassekode=klassekode
+        ).first()
 
         if not class_code_color:
             class_code_color = CodeToColor(klassekode=klassekode, color=farge)
@@ -102,13 +105,13 @@ def handle_uploaded_file_colors(f):
             class_color_map.class_colors.add(class_code_color)
             if klasse not in updated_clases:
                 updated_clases.add(klasse)
-         
+
         if farge != class_code_color.color:
             class_code_color.color = farge
             class_code_color.save(update_fields=["color"])
             if klasse not in updated_clases:
                 updated_clases.add(klasse)
-    
+
     all_updates = Version.objects.all()
     version_map = {update.klasse: update for update in all_updates}
 
@@ -118,6 +121,7 @@ def handle_uploaded_file_colors(f):
         version_map[klasse].versjon += 1
         version_map[klasse].save(update_fields=["versjon"])
         print("updated", klasse, "to version", version_map[klasse].versjon)
+
 
 def handle_uploaded_file(f):
     file_name = str(f)
@@ -165,6 +169,7 @@ def handle_uploaded_file(f):
                     time_object.slutt_tid == other_time_object.slutt_tid,
                     time_object.lærer == other_time_object.lærer,
                     time_object.dag == other_time_object.dag,
+                    time_object.klassekode == other_time_object.klassekode,
                 ]
             )
             for other_time_object in other_timer
