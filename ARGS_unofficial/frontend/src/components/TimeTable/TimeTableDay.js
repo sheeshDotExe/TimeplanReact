@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 const ELEMENT_SCALING_FACTOR = 6; // rem per hour
 
-const moment = require('moment');
+const moment = require("moment");
 
 const TimeDisplay = ({ time, position }) => {
   return <div className={position}>{time}</div>;
@@ -24,20 +24,20 @@ const InfoDisplay = ({
       </div>
       <hr className=" opacity-20"></hr>
       <div>
-      <p>
+        <p>
           {teacherFirstName} {teacherLastName}
-      </p>
+        </p>
       </div>
     </div>
   );
 };
 
-const Lesson = ({ Data, ColorMap, nextData }) => {
+const Lesson = ({ Data, ColorMap, previousData }) => {
   const [teacherFirstName, setTeacherFirstName] = useState("");
   const [teacherLastName, setTeacherLastName] = useState("");
   const [styling, setStyling] = useState({
     height: "0rem",
-    "margin-bottom": "0rem",
+    "margin-top": "0rem",
   });
   const [tailWindStyling, setTailWindStyling] = useState(
     "relative flex flex-col items-center justify-center border-y-2 border-solid border-black"
@@ -50,40 +50,50 @@ const Lesson = ({ Data, ColorMap, nextData }) => {
     const teacherSplitName = Data.teacher.split(":");
     setTeacherFirstName(teacherSplitName[0]);
     setTeacherLastName(teacherSplitName[1]);
-    
+
     const current = new moment();
     const dateTimeStart = new moment(
-      `${current.year()}-${
-        current.month() + 1
-      }-${current.date()} ${Data.begin}`, "YYYY-MM-DD HH:mm"
+      `${current.year()}-${current.month() + 1}-${current.date()} ${
+        Data.begin
+      }`,
+      "YYYY-MM-DD HH:mm"
     );
     const dateTimeEnd = new moment(
-      `${current.year()}-${
-        current.month() + 1
-      }-${current.date()} ${Data.end}`, "YYYY-MM-DD HH:mm"
+      `${current.year()}-${current.month() + 1}-${current.date()} ${Data.end}`,
+      "YYYY-MM-DD HH:mm"
     );
     const heightMath =
       ((dateTimeEnd - dateTimeStart) / (1000 * 60 * 60)) *
       ELEMENT_SCALING_FACTOR;
 
-    let paddingBottom = 0;
+    let paddingTop = 0;
 
-    if (nextData !== null) {
-      const dateTimeNext = new moment(
-        `${current.year()}-${
-          current.month() + 1
-        }-${current.date()} ${nextData.begin}`, "YYYY-MM-DD HH:mm"
+    if (previousData !== null) {
+      const dateTimePrevious = new moment(
+        `${current.year()}-${current.month() + 1}-${current.date()} ${
+          previousData.end
+        }`,
+        "YYYY-MM-DD HH:mm"
       );
 
       const paddingMath =
-        ((dateTimeNext - dateTimeEnd) / (1000 * 60 * 60)) *
+        ((dateTimeStart - dateTimePrevious) / (1000 * 60 * 60)) *
         ELEMENT_SCALING_FACTOR;
-      paddingBottom = paddingMath;
+      paddingTop = paddingMath;
       if (paddingMath === 0) {
         setTailWindStyling(
           "relative flex flex-col items-center justify-center border-t-2 border-solid border-black"
         );
       }
+    } else {
+      const dateTimeEarliestStart = new moment(
+        `${current.year()}-${current.month() + 1}-${current.date()} ${"8:30"}`,
+        "YYYY-MM-DD HH:mm"
+      );
+      const paddingMath =
+        ((dateTimeStart - dateTimeEarliestStart) / (1000 * 60 * 60)) *
+        ELEMENT_SCALING_FACTOR;
+      paddingTop = paddingMath;
     }
 
     let color = "#ffffff";
@@ -94,14 +104,17 @@ const Lesson = ({ Data, ColorMap, nextData }) => {
 
     setStyling({
       height: `${heightMath}rem`,
-      "margin-bottom": `${paddingBottom}rem`,
+      "margin-top": `${paddingTop}rem`,
       "background-color": color,
     });
-  }, [Data, nextData]);
+  }, [Data, previousData]);
 
   return (
     <div className={`${tailWindStyling} text-center`} style={styling}>
-      <TimeDisplay position="absolute z-10 px-1 py-0.5 -top-3 left-0 bg-slate-400 text-xs text-center" time={Data.begin} />
+      <TimeDisplay
+        position="absolute z-10 px-1 py-0.5 -top-3 left-0 bg-slate-400 text-xs text-center"
+        time={Data.begin}
+      />
       <InfoDisplay
         className={Data.className}
         classCode={Data.classCode}
@@ -109,13 +122,16 @@ const Lesson = ({ Data, ColorMap, nextData }) => {
         teacherFirstName={teacherFirstName}
         teacherLastName={teacherLastName}
       />
-      <TimeDisplay position="absolute z-10 px-1 py-0.5 -bottom-3 right-0 bg-slate-400 text-xs text-center" time={Data.end} />
+      <TimeDisplay
+        position="absolute z-10 px-1 py-0.5 -bottom-3 right-0 bg-slate-400 text-xs text-center"
+        time={Data.end}
+      />
       <hr />
     </div>
   );
 };
 
-export const TimeTableDay = ({ TableData, ColorMap, currentDay, thisDay}) => {
+export const TimeTableDay = ({ TableData, ColorMap, currentDay, thisDay }) => {
   const [timeIndicatorPos, setTimeIndicatorPos] = useState(0);
   const [showTimeIndicator, setShowTimeIndicator] = useState(false);
   const [activeDay, setActiveDay] = useState(false);
@@ -123,41 +139,53 @@ export const TimeTableDay = ({ TableData, ColorMap, currentDay, thisDay}) => {
   const doTimeMath = () => {
     const current = new moment();
     const dateTimeStart = new moment(
-      `${current.year()}-${
-        current.month() + 1
-      }-${current.date()} ${"08:30"}`, "YYYY-MM-DD HH:mm"
+      `${current.year()}-${current.month() + 1}-${current.date()} ${"08:30"}`,
+      "YYYY-MM-DD HH:mm"
     );
     const dateTimeEnd = new moment();
     const heightMath =
       ((dateTimeEnd - dateTimeStart) / (1000 * 60 * 60)) *
       ELEMENT_SCALING_FACTOR;
-    if (heightMath > -2 && heightMath < (9*ELEMENT_SCALING_FACTOR)) {
+    if (heightMath > -2 && heightMath < 9 * ELEMENT_SCALING_FACTOR) {
       setTimeIndicatorPos(heightMath);
       setShowTimeIndicator(true);
     }
-  }
+  };
 
   useEffect(() => {
-    if (currentDay === thisDay){
+    if (currentDay === thisDay) {
       setActiveDay(true);
       doTimeMath();
-      const interval = setInterval(()=>{doTimeMath()},1000*60);
+      const interval = setInterval(() => {
+        doTimeMath();
+      }, 1000 * 60);
       return () => clearInterval(interval);
     } else {
       setActiveDay(false);
     }
-  },[currentDay])
+  }, [currentDay]);
 
   return (
-    <div className={`border-2 border-solid border-black ${activeDay ? "" : "hidden"} md:block`} style={{"background-color": "#CCCCCC", "minHeight": `${ELEMENT_SCALING_FACTOR*9}rem`}}>
+    <div
+      className={`border-2 border-solid border-black ${
+        activeDay ? "" : "hidden"
+      } md:block`}
+      style={{
+        "background-color": "#CCCCCC",
+        minHeight: `${ELEMENT_SCALING_FACTOR * 9}rem`,
+      }}
+    >
       {TableData.length > 0 && (
         <div className="flex flex-col">
           <h2 className="text-center font-bold py-6 mb-6 bg-slate-400 px-32 md:px-16 2xl:px-32">
             {TableData[0].day}
           </h2>
-          {(showTimeIndicator) && (
+          {showTimeIndicator && (
             <div className="relative">
-              <div className="absolute z-20 w-full h-1 bg-red-600" style={{"top": `${timeIndicatorPos}rem`}}></div>
+              <div
+                className="absolute z-20 w-full h-1 bg-red-600"
+                style={{ top: `${timeIndicatorPos}rem` }}
+              ></div>
             </div>
           )}
           {TableData.map((lession, index) => {
@@ -165,9 +193,7 @@ export const TimeTableDay = ({ TableData, ColorMap, currentDay, thisDay}) => {
               <Lesson
                 Data={lession}
                 ColorMap={ColorMap}
-                nextData={
-                  index < TableData.length - 1 ? TableData[index + 1] : null
-                }
+                previousData={index > 0 ? TableData[index - 1] : null}
               />
             );
           })}
